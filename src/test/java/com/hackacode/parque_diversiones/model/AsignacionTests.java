@@ -10,6 +10,7 @@ public class AsignacionTests {
 
     Asignacion asignacion;
     Juego juego;
+    Empleado empleado;
 
     @BeforeEach
     void setUp() {
@@ -31,5 +32,15 @@ public class AsignacionTests {
         asignacion.setJuego(juego);
         Assertions.assertNotNull(asignacion.getJuego());
         Assertions.assertEquals(asignacion.getJuego().getHora_fin(), LocalTime.of(18,0));
+    }
+
+    @Test
+    public void deberiaCrearseConUnEmpleadoAsociado() {
+        empleado = new EmpleadoJuego();
+        empleado.setNombre("carlos");
+        asignacion.setEmpleado(empleado);
+        Assertions.assertNotNull(asignacion.getEmpleado());
+        Assertions.assertEquals("carlos", asignacion.getEmpleado().getNombre());
+
     }
 }

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -32,5 +34,12 @@ public class EntradaTests {
         entrada.setJuego(juego);
         Assertions.assertNotNull(entrada.getJuego());
         Assertions.assertEquals(entrada.getJuego().getHora_fin(), LocalTime.of(18,0));
+    }
+
+    @Test
+    public void deberiaCrearseConFechaYHorarioDeUso() {
+        entrada.setFecha_hora(LocalDateTime.of(LocalDate.of(2026, 6, 8), LocalTime.of(14,0)));
+        Assertions.assertEquals(LocalDateTime.of(LocalDate.of(2026, 6, 8), LocalTime.of(14,0)),
+                entrada.getFecha_hora());
     }
 }

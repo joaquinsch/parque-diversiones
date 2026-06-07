@@ -19,6 +19,7 @@ public class AsignacionTests {
         asignacion = new Asignacion();
         juego = new Juego();
         juego.setId_juego(1L);
+        juego.setNombre("montaniaroja");
         juego.setHora_inicio(LocalTime.of(14,0));
         juego.setHora_fin(LocalTime.of(18,0));
     }
@@ -67,6 +68,46 @@ public class AsignacionTests {
         Assertions.assertEquals(1, juego.getAsignaciones().size());
         Assertions.assertEquals(LocalTime.of(14,0), juego.getAsignaciones().get(0).getJuego().getHora_inicio());
         Assertions.assertEquals("maria", empleado.getAsignaciones().get(0).getEmpleado().getNombre());
+    }
+
+    @Test
+    public void unEmpleadoPerteneceAAsignacionesDeDistintosJuegos() {
+        empleado = new EmpleadoJuego();
+        empleado.setNombre("maria");
+
+        asignacion.setEmpleado(empleado);
+        asignacion.setJuego(juego);
+
+        Juego juego2 = new Juego();
+        juego2.setNombre("montaniaverde");
+
+        Asignacion asignacion2 = new Asignacion();
+        asignacion2.setEmpleado(empleado);
+        asignacion2.setJuego(juego2);
+
+        List<Asignacion> asignaciones = new ArrayList<>();
+        asignaciones.add(asignacion);
+        List<Asignacion> asignaciones2 = new ArrayList<>();
+        asignaciones2.add(asignacion2);
+
+        juego.setAsignaciones(asignaciones);
+        juego2.setAsignaciones(asignaciones2);
+        List<Asignacion> asignacionesDelEmpleado = new ArrayList<>();
+        asignacionesDelEmpleado.add(asignacion);
+        asignacionesDelEmpleado.add(asignacion2);
+        empleado.setAsignaciones(asignacionesDelEmpleado);
+
+        Assertions.assertNotNull(empleado.getAsignaciones());
+        Assertions.assertNotNull(juego.getAsignaciones());
+        Assertions.assertNotNull(juego2.getAsignaciones());
+
+        Assertions.assertEquals(2, empleado.getAsignaciones().size());
+        Assertions.assertEquals(1, juego.getAsignaciones().size());
+        Assertions.assertEquals(1, juego2.getAsignaciones().size());
+
+        Assertions.assertEquals("montaniaroja", empleado.getAsignaciones().get(0).getJuego().getNombre());
+        Assertions.assertEquals("montaniaverde", empleado.getAsignaciones().get(1).getJuego().getNombre());
+
 
     }
 }

@@ -6,10 +6,13 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
+
 @Getter @Setter
 public class Juego {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_juego;
+    private LocalTime hora_inicio;
 }

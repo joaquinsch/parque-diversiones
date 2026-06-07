@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class Asignacion {
     private Long id_asignacion;
+    private Juego juego;
 }

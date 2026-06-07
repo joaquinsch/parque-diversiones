@@ -9,5 +9,7 @@ import java.util.List;
 public abstract class Empleado {
     private Long id_empleado;
     private String nombre;
+    private String apellido;
+    private String dni;
     private List<Asignacion> asignaciones;
 }

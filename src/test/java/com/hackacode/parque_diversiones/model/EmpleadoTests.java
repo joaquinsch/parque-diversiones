@@ -28,6 +28,18 @@ public class EmpleadoTests {
     }
 
     @Test
+    public void deberiaCrearseConApellido() {
+        empleado.setApellido("gomez");
+        Assertions.assertEquals("gomez", empleado.getApellido());
+    }
+
+    @Test
+    public void deberiaCrearseConDni() {
+        empleado.setDni("11223344");
+        Assertions.assertEquals("11223344", empleado.getDni());
+    }
+
+    @Test
     public void deberiaTenerUnaListaDeAsignaciones() {
         Asignacion asignacion = new Asignacion();
         asignacion.setEmpleado(empleado);

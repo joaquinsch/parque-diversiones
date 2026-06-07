@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter @Setter
 public class Juego {
@@ -16,5 +17,6 @@ public class Juego {
     private Long id_juego;
     private LocalTime hora_inicio;
     private LocalTime hora_fin;
+    private List<Asignacion> asignaciones;
 
 }

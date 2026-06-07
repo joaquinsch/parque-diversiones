@@ -18,5 +18,7 @@ public class Juego {
     private LocalTime hora_inicio;
     private LocalTime hora_fin;
     private List<Asignacion> asignaciones;
+    private List<Entrada> entradas;
+
 
 }

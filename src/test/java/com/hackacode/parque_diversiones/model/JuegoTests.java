@@ -38,12 +38,22 @@ public class JuegoTests {
     }
 
     @Test
-    @DisplayName("Deberia crearse con lista de asignaciones")
+    @DisplayName("Debería crearse con lista de asignaciones")
     public void deberiaCreareseConListaDeAsignaciones() {
         List<Asignacion> asignaciones = new ArrayList<>();
         asignaciones.add(new Asignacion());
         juego.setAsignaciones(asignaciones);
         Assertions.assertNotNull(juego.getAsignaciones());
         Assertions.assertEquals(1, juego.getAsignaciones().size());
+    }
+
+    @Test
+    @DisplayName("Debería crearse con lista de asignaciones")
+    public void deberiaCreareseConListaDeEntradas() {
+        List<Entrada> entradas = new ArrayList<>();
+        entradas.add(new Entrada());
+        juego.setEntradas(entradas);
+        Assertions.assertNotNull(juego.getEntradas());
+        Assertions.assertEquals(1, juego.getEntradas().size());
     }
 }

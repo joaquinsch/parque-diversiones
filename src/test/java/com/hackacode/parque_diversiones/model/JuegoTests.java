@@ -1,13 +1,20 @@
 package com.hackacode.parque_diversiones.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
 
 public class JuegoTests {
 
-    Juego juego = new Juego();
+    Juego juego;
+
+    @BeforeEach
+    void setUp() {
+        juego = new Juego();
+    }
+
 
     @Test
     public void deberiaCrearseConId() {

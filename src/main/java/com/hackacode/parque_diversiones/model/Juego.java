@@ -15,4 +15,6 @@ public class Juego {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_juego;
     private LocalTime hora_inicio;
+    private LocalTime hora_fin;
+
 }

@@ -20,4 +20,10 @@ public class JuegoTests {
         juego.setHora_inicio(LocalTime.of(14,0));
         Assertions.assertEquals(LocalTime.of(14,0), juego.getHora_inicio());
     }
+
+    @Test
+    public void deberiaCrearseConHorarioDeFin() {
+        juego.setHora_fin(LocalTime.of(15,0));
+        Assertions.assertEquals(LocalTime.of(15,0), juego.getHora_fin());
+    }
 }

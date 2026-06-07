@@ -50,4 +50,10 @@ public class EmpleadoTests {
         Assertions.assertNotNull(empleado.getAsignaciones());
         Assertions.assertEquals(1, empleado.getAsignaciones().size());
     }
+
+    @Test
+    public void empleadoPuedeSerEmpleadoAdministrativo() {
+        Empleado empleAdmin = new EmpleadoAdministrativo();
+        Assertions.assertInstanceOf(EmpleadoAdministrativo.class, empleAdmin);
+    }
 }

@@ -71,7 +71,7 @@ public class AsignacionTests {
     }
 
     @Test
-    public void unEmpleadoPerteneceAAsignacionesDeDistintosJuegos() {
+    public void unMismoEmpleadoPerteneceAAsignacionesDeDistintosJuegos() {
         empleado = new EmpleadoJuego();
         empleado.setNombre("maria");
 
@@ -107,7 +107,5 @@ public class AsignacionTests {
 
         Assertions.assertEquals("montaniaroja", empleado.getAsignaciones().get(0).getJuego().getNombre());
         Assertions.assertEquals("montaniaverde", empleado.getAsignaciones().get(1).getJuego().getNombre());
-
-
     }
 }

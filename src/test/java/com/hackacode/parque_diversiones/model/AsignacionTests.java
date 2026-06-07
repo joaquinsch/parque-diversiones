@@ -41,6 +41,5 @@ public class AsignacionTests {
         asignacion.setEmpleado(empleado);
         Assertions.assertNotNull(asignacion.getEmpleado());
         Assertions.assertEquals("carlos", asignacion.getEmpleado().getNombre());
-
     }
 }

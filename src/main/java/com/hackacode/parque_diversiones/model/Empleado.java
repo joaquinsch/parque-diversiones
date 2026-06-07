@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public abstract class Empleado {
-
+    private Long id_empleado;
     private String nombre;
 }

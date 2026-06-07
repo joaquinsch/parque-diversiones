@@ -6,4 +6,5 @@ import lombok.Setter;
 @Getter @Setter
 public class Entrada {
     private Long id_entrada;
+    private Juego juego;
 }

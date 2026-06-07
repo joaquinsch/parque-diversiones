@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsignacionTests {
 
@@ -41,5 +43,30 @@ public class AsignacionTests {
         asignacion.setEmpleado(empleado);
         Assertions.assertNotNull(asignacion.getEmpleado());
         Assertions.assertEquals("carlos", asignacion.getEmpleado().getNombre());
+    }
+
+    @Test
+    public void unaListaDeAsignacionesDeberiaPertenecerAUnJuegoYEmpleado() {
+        empleado = new EmpleadoJuego();
+        empleado.setNombre("maria");
+
+        Asignacion asignacion = new Asignacion();
+        asignacion.setEmpleado(empleado);
+        asignacion.setJuego(juego);
+
+        List<Asignacion> asignaciones = new ArrayList<>();
+        asignaciones.add(asignacion);
+
+        juego.setAsignaciones(asignaciones);
+        empleado.setAsignaciones(asignaciones);
+
+        Assertions.assertNotNull(empleado.getAsignaciones());
+        Assertions.assertNotNull(juego.getAsignaciones());
+
+        Assertions.assertEquals(1, empleado.getAsignaciones().size());
+        Assertions.assertEquals(1, juego.getAsignaciones().size());
+        Assertions.assertEquals(LocalTime.of(14,0), juego.getAsignaciones().get(0).getJuego().getHora_inicio());
+        Assertions.assertEquals("maria", empleado.getAsignaciones().get(0).getEmpleado().getNombre());
+
     }
 }

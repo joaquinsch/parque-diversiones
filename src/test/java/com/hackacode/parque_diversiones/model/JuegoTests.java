@@ -18,7 +18,6 @@ public class JuegoTests {
         juego = new Juego();
     }
 
-
     @Test
     public void deberiaCrearseConId() {
         juego.setId_juego(1L);
@@ -48,7 +47,6 @@ public class JuegoTests {
     }
 
     @Test
-    @DisplayName("Debería crearse con lista de asignaciones")
     public void deberiaCreareseConListaDeEntradas() {
         List<Entrada> entradas = new ArrayList<>();
         entradas.add(new Entrada());

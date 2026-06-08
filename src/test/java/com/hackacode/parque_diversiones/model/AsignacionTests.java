@@ -12,7 +12,7 @@ public class AsignacionTests {
 
     Asignacion asignacion;
     Juego juego;
-    Empleado empleado;
+    EmpleadoJuego empleado;
 
     @BeforeEach
     void setUp() {

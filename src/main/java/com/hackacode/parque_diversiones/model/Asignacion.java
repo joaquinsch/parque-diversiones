@@ -16,5 +16,5 @@ public class Asignacion {
     private Juego juego;
     @ManyToOne
     @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
+    private EmpleadoJuego empleado;
 }

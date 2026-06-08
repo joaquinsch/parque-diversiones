@@ -8,47 +8,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmpleadoTests {
-    Empleado empleado;
+    EmpleadoJuego empleadoJuego;
 
     @BeforeEach
     void setUp() {
-        empleado = new EmpleadoJuego();
+        empleadoJuego = new EmpleadoJuego();
     }
 
     @Test
     public void deberiaCrearseConId() {
-        empleado.setId_empleado(1L);
-        Assertions.assertEquals(1L, empleado.getId_empleado());
+        empleadoJuego.setId_empleado(1L);
+        Assertions.assertEquals(1L, empleadoJuego.getId_empleado());
     }
 
     @Test
     public void deberiaCrearseConNombre() {
-        empleado.setNombre("carlos");
-        Assertions.assertEquals("carlos", empleado.getNombre());
+        empleadoJuego.setNombre("carlos");
+        Assertions.assertEquals("carlos", empleadoJuego.getNombre());
     }
 
     @Test
     public void deberiaCrearseConApellido() {
-        empleado.setApellido("gomez");
-        Assertions.assertEquals("gomez", empleado.getApellido());
+        empleadoJuego.setApellido("gomez");
+        Assertions.assertEquals("gomez", empleadoJuego.getApellido());
     }
 
     @Test
     public void deberiaCrearseConDni() {
-        empleado.setDni("11223344");
-        Assertions.assertEquals("11223344", empleado.getDni());
+        empleadoJuego.setDni("11223344");
+        Assertions.assertEquals("11223344", empleadoJuego.getDni());
     }
 
     @Test
     public void deberiaTenerUnaListaDeAsignaciones() {
         Asignacion asignacion = new Asignacion();
-        asignacion.setEmpleado(empleado);
+        asignacion.setEmpleado(empleadoJuego);
 
         List<Asignacion> asignaciones = new ArrayList<>();
         asignaciones.add(asignacion);
-        empleado.setAsignaciones(asignaciones);
-        Assertions.assertNotNull(empleado.getAsignaciones());
-        Assertions.assertEquals(1, empleado.getAsignaciones().size());
+        empleadoJuego.setAsignaciones(asignaciones);
+        Assertions.assertNotNull(empleadoJuego.getAsignaciones());
+        Assertions.assertEquals(1, empleadoJuego.getAsignaciones().size());
     }
 
     @Test

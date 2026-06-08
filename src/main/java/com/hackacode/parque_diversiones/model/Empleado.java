@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -17,6 +16,4 @@ public abstract class Empleado {
     private String nombre;
     private String apellido;
     private String dni;
-    @OneToMany(mappedBy = "empleado")
-    private List<Asignacion> asignaciones;
 }

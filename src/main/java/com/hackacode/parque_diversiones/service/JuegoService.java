@@ -2,6 +2,7 @@ package com.hackacode.parque_diversiones.service;
 
 import com.hackacode.parque_diversiones.dto.JuegoDTO;
 import com.hackacode.parque_diversiones.dto.JuegoResponseDTO;
+import com.hackacode.parque_diversiones.exceptions.HorarioInvalidoError;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.repository.JuegoRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class JuegoService implements IJuegoService {
         aGuardar.setNombre(juego.getNombre());
         aGuardar.setHora_inicio(juego.getHora_inicio());
         aGuardar.setHora_fin(juego.getHora_fin());
-
+        validarHorarioDeJuego(juego);
         Juego guardado = juegoRepository.save(aGuardar);
 
         JuegoResponseDTO respuesta = new JuegoResponseDTO();
@@ -30,5 +31,11 @@ public class JuegoService implements IJuegoService {
         respuesta.setHora_inicio(guardado.getHora_inicio());
         respuesta.setHora_fin(guardado.getHora_fin());
         return respuesta;
+    }
+
+    private void validarHorarioDeJuego(JuegoDTO juegoDTO) {
+        if (juegoDTO.getHora_inicio().isAfter(juegoDTO.getHora_fin())) {
+            throw new HorarioInvalidoError("Los horarios de inicio y fin son inválidos");
+        }
     }
 }

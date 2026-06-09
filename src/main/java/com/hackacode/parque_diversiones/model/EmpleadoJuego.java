@@ -1,5 +1,6 @@
 package com.hackacode.parque_diversiones.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -15,6 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EmpleadoJuego extends Empleado {
 
-    @OneToMany(mappedBy = "empleado")
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private List<Asignacion> asignaciones;
 }

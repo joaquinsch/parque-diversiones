@@ -15,4 +15,11 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body((Map.of("mensaje", e.getMessage())));
     }
+
+    @ExceptionHandler(JuegoNoEncontradoError.class)
+    public ResponseEntity<Map<String, String>> handleJuegoNoEncontradoError(JuegoNoEncontradoError e) {
+        return ResponseEntity
+                .badRequest()
+                .body((Map.of("mensaje", e.getMessage())));
+    }
 }

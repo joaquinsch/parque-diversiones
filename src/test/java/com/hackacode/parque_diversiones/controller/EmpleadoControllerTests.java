@@ -7,6 +7,7 @@ import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.service.IEmpleadoJuegoService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,18 @@ public class EmpleadoControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dni").value("1122223333"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[0].id_juego").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[1].id_juego").value(2L));
+
+    }
+
+    @Disabled
+    @Test
+    public void deberiaDarErrorJuegoNoEncontradoSiSePoneUnIdJuegoInexistente(){
+
+    }
+
+    @Disabled
+    @Test
+    public void deberiaDarErrorSiIntentaAsignarEmpleadoADosOMasVecesElMismoIdJuego(){
 
     }
 

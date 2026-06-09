@@ -3,6 +3,7 @@ package com.hackacode.parque_diversiones.service;
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
+import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.Asignacion;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
@@ -39,7 +40,7 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         devuelto.setNombre(guardado.getNombre());
         devuelto.setApellido(guardado.getApellido());
         devuelto.setDni(guardado.getDni());
-        devuelto.setAsignaciones(empleadoDTO.getAsignaciones()); // cambiar
+        devuelto.setAsignaciones(empleadoDTO.getAsignaciones()); // cambiar tal vez
         return devuelto;
     }
 
@@ -51,7 +52,7 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         List<Asignacion> asignaciones = new ArrayList<>();
         for (AsignacionDTO asignacionDTO : empleadoJuegoDTO.getAsignaciones()) {
             Juego juego = juegoRepository.findById(asignacionDTO.getId_juego())
-                    .orElseThrow(() -> new RuntimeException("Juego no encontrado"));
+                    .orElseThrow(() -> new JuegoNoEncontradoError("El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
             Asignacion asignacion = new Asignacion();
             asignacion.setJuego(juego);
             asignacion.setEmpleado(empleadoJuego);

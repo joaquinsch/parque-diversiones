@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.hackacode.parque_diversiones.dto.JuegoDTO;
 import com.hackacode.parque_diversiones.dto.JuegoResponseDTO;
+import com.hackacode.parque_diversiones.exceptions.HorarioInvalidoError;
 import com.hackacode.parque_diversiones.service.IJuegoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,5 +56,23 @@ public class JuegoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id_juego").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nombre").value("montania verde"));
+    }
+
+    @Test
+    public void deberiaDevolverErrorHorarioInvalido() throws Exception {
+        JuegoDTO juegoMalCreado = new JuegoDTO();
+        juegoMalCreado.setNombre("montania verde");
+        juegoMalCreado.setHora_inicio(LocalTime.of(15, 0));
+        juegoMalCreado.setHora_fin(LocalTime.of(12, 0));
+
+        Mockito.when(juegoService.guardarJuego(Mockito.any(JuegoDTO.class)))
+                .thenThrow(new HorarioInvalidoError("Los horarios de inicio y fin son inválidos"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/juegos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(juegoMalCreado))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje").value("Los horarios de inicio y fin son inválidos"));
     }
 }

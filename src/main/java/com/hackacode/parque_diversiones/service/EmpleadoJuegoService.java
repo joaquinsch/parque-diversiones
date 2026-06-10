@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,13 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         devuelto.setDni(guardado.getDni());
         devuelto.setAsignaciones(empleadoDTO.getAsignaciones()); // cambiar tal vez
         return devuelto;
+    }
+
+    @Override
+    public EmpleadoJuego buscarEmpleado(Long id_empleado) {
+        return empleadoJuegoRepository.findById(id_empleado).orElseThrow(
+                () -> new NoSuchElementException("No se encontró al empleado con id " + id_empleado)
+        );
     }
 
     /*

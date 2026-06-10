@@ -4,6 +4,7 @@ import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
+import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.repository.EmpleadoJuegoRepository;
 import com.hackacode.parque_diversiones.repository.JuegoRepository;
@@ -73,5 +74,19 @@ public class EmpleadoJuegoServiceTests {
                 () -> empleadoJuegoService.guardarEmpleadoJuego(empleado)
         );
         Assertions.assertEquals("Se enviaron juegos duplicados en las asignaciones", exception.getMessage());
+    }
+
+    @Test
+    public void deberiaEncontrarAlEmpleadoPorId() {
+        EmpleadoJuego emple = new EmpleadoJuego();
+        emple.setId_empleado(3L);
+        emple.setNombre("jose");
+        Mockito.when(empleadoJuegoRepository.findById(emple.getId_empleado()))
+                .thenReturn(Optional.of(emple));
+        EmpleadoJuego encontrado = empleadoJuegoService.buscarEmpleado(emple.getId_empleado());
+        Assertions.assertNotNull(encontrado);
+        Assertions.assertEquals(3L, encontrado.getId_empleado());
+        Assertions.assertEquals("jose", encontrado.getNombre());
+
     }
 }

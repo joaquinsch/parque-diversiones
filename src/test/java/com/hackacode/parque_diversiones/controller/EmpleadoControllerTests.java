@@ -6,6 +6,7 @@ import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
+import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.service.IEmpleadoJuegoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ public class EmpleadoControllerTests {
 
     Juego juego;
     Juego juego2;
+    EmpleadoJuego unEmpleado;
 
     @BeforeEach
     void setUp() {
@@ -46,6 +48,10 @@ public class EmpleadoControllerTests {
         juego2 = new Juego();
         juego2.setId_juego(2L);
         juego.setNombre("montania roja");
+
+        unEmpleado = new EmpleadoJuego();
+        unEmpleado.setId_empleado(3L);
+        unEmpleado.setNombre("jose");
     }
 
     @Test
@@ -142,6 +148,19 @@ public class EmpleadoControllerTests {
                         .value("Se enviaron juegos duplicados en las asignaciones"));
 
 
+    }
+
+
+    @Test
+    public void deberiaEncontrarAlEmpleadoBuscadoPorId() throws Exception {
+        Mockito.when(empleadoJuegoService.buscarEmpleado(unEmpleado.getId_empleado()))
+                .thenReturn(unEmpleado);
+        mockMvc.perform(MockMvcRequestBuilders.get("/empleados/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id_empleado").value(3L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nombre").value("jose"));
     }
 
 

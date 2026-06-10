@@ -4,6 +4,7 @@ import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
+import com.hackacode.parque_diversiones.exceptions.EmpleadoNoEncontradoError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.Asignacion;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,7 +51,7 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
     @Override
     public EmpleadoJuego buscarEmpleado(Long id_empleado) {
         return empleadoJuegoRepository.findById(id_empleado).orElseThrow(
-                () -> new NoSuchElementException("No se encontró al empleado con id " + id_empleado)
+                () -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado)
         );
     }
 

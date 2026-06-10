@@ -5,6 +5,7 @@ import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
+import com.hackacode.parque_diversiones.exceptions.EmpleadoNoEncontradoError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
@@ -161,6 +162,19 @@ public class EmpleadoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id_empleado").value(3L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nombre").value("jose"));
+    }
+
+    @Test
+    public void deberiaDarErrorSiNoEncuentraAlEmpleadoBuscado() throws Exception {
+        Mockito.when(empleadoJuegoService.buscarEmpleado(unEmpleado.getId_empleado()))
+                .thenThrow(new EmpleadoNoEncontradoError("No se encontró al empleado con id " + unEmpleado.getId_empleado()));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/empleados/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje")
+                        .value("No se encontró al empleado con id " + unEmpleado.getId_empleado()));
     }
 
 

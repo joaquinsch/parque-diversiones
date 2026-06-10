@@ -3,6 +3,7 @@ package com.hackacode.parque_diversiones.service;
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
+import com.hackacode.parque_diversiones.exceptions.EmpleadoNoEncontradoError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
@@ -87,6 +88,21 @@ public class EmpleadoJuegoServiceTests {
         Assertions.assertNotNull(encontrado);
         Assertions.assertEquals(3L, encontrado.getId_empleado());
         Assertions.assertEquals("jose", encontrado.getNombre());
+
+    }
+
+    @Test
+    public void deberiaDarErrorSiNoEncuentraAlEmpleadoBuscado() {
+        EmpleadoJuego emple = new EmpleadoJuego();
+        emple.setId_empleado(3L);
+        emple.setNombre("jose");
+        Mockito.when(empleadoJuegoRepository.findById(emple.getId_empleado()))
+                .thenThrow(new EmpleadoNoEncontradoError("No se encontró al empleado con id " + emple.getId_empleado()));
+        EmpleadoNoEncontradoError exception = assertThrows(
+                EmpleadoNoEncontradoError.class,
+                () -> empleadoJuegoService.buscarEmpleado(emple.getId_empleado())
+        );
+        Assertions.assertEquals("No se encontró al empleado con id " + emple.getId_empleado(), exception.getMessage());
 
     }
 }

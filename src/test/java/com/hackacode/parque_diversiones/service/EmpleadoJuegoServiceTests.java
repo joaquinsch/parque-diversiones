@@ -2,7 +2,9 @@ package com.hackacode.parque_diversiones.service;
 
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
+import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
+import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.repository.EmpleadoJuegoRepository;
 import com.hackacode.parque_diversiones.repository.JuegoRepository;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +44,9 @@ public class EmpleadoJuegoServiceTests {
     public void deberiaDarErrorSiNoEncuentraUnJuego() {
         empleado = new EmpleadoJuegoDTO();
         AsignacionDTO as1 = new AsignacionDTO();
-        as1.setId_juego(8L);
+        Juego juego = new Juego();
+        juego.setId_juego(8L);
+        as1.setId_juego(juego.getId_juego());
         empleado.setAsignaciones(List.of(as1));
 
         Mockito.when(juegoRepository.findById(as1.getId_juego()))
@@ -53,5 +57,21 @@ public class EmpleadoJuegoServiceTests {
                 () -> empleadoJuegoService.guardarEmpleadoJuego(empleado)
         );
         Assertions.assertEquals("El juego con id 8 no fue encontrado", exception.getMessage());
+    }
+
+    @Test
+    public void deberiaDarErrorSiPasaDosVecesElMismoIdJuegoAlCrearUnEmpleado() {
+        empleado = new EmpleadoJuegoDTO();
+        AsignacionDTO as1 = new AsignacionDTO();
+        Juego juego = new Juego();
+        juego.setId_juego(8L);
+        as1.setId_juego(juego.getId_juego());
+        empleado.setAsignaciones(List.of(as1,as1));
+
+        AsignacionDuplicadaError exception = assertThrows(
+                AsignacionDuplicadaError.class,
+                () -> empleadoJuegoService.guardarEmpleadoJuego(empleado)
+        );
+        Assertions.assertEquals("Se enviaron juegos duplicados en las asignaciones", exception.getMessage());
     }
 }

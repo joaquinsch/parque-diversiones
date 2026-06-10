@@ -3,6 +3,7 @@ package com.hackacode.parque_diversiones.service;
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
+import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.Asignacion;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EmpleadoJuegoService implements IEmpleadoJuegoService{
@@ -50,14 +53,27 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
      */
     private List<Asignacion> recuperarAsignaciones(EmpleadoJuegoDTO empleadoJuegoDTO, EmpleadoJuego empleadoJuego) {
         List<Asignacion> asignaciones = new ArrayList<>();
+        validarAsignaciones(empleadoJuegoDTO);
+
         for (AsignacionDTO asignacionDTO : empleadoJuegoDTO.getAsignaciones()) {
             Juego juego = juegoRepository.findById(asignacionDTO.getId_juego())
                     .orElseThrow(() -> new JuegoNoEncontradoError("El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
+
             Asignacion asignacion = new Asignacion();
             asignacion.setJuego(juego);
             asignacion.setEmpleado(empleadoJuego);
             asignaciones.add(asignacion);
         }
         return asignaciones;
+    }
+
+    private void validarAsignaciones(EmpleadoJuegoDTO empleadoJuegoDTO) {
+        Set<Long> idsJuegosValidados = empleadoJuegoDTO.getAsignaciones().stream()
+                .map(AsignacionDTO::getId_juego)
+                .collect(Collectors.toSet());
+
+        if (idsJuegosValidados.size() != empleadoJuegoDTO.getAsignaciones().size()) {
+            throw new AsignacionDuplicadaError("Se enviaron juegos duplicados en las asignaciones");
+        }
     }
 }

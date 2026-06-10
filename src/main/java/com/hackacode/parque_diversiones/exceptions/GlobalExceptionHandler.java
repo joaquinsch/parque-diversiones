@@ -22,4 +22,11 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body((Map.of("mensaje", e.getMessage())));
     }
+
+    @ExceptionHandler(AsignacionDuplicadaError.class)
+    public ResponseEntity<Map<String, String>> handleAsignacionDuplicadaError(AsignacionDuplicadaError e){
+        return ResponseEntity
+                .badRequest()
+                .body((Map.of("mensaje", e.getMessage())));
+    }
 }

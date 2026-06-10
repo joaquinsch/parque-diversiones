@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
+import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
+import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.service.IEmpleadoJuegoService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,15 +85,62 @@ public class EmpleadoControllerTests {
 
     }
 
-    @Disabled
     @Test
-    public void deberiaDarErrorJuegoNoEncontradoSiSePoneUnIdJuegoInexistente(){
+    public void deberiaDarErrorJuegoNoEncontradoSiSePoneUnIdJuegoInexistente() throws Exception {
+        EmpleadoJuegoDTO empleadoJuegoDTO = new EmpleadoJuegoDTO();
+        empleadoJuegoDTO.setNombre("carlos");
+        empleadoJuegoDTO.setApellido("gomez");
+        empleadoJuegoDTO.setDni("1122223333");
+        List<AsignacionDTO> asignaciones = new ArrayList<>();
+        AsignacionDTO as1 = new AsignacionDTO();
+        as1.setId_juego(8L);
+        asignaciones.add(as1);
+        empleadoJuegoDTO.setAsignaciones(asignaciones);
 
+        EmpleadoJuegoResponseDTO devuelto = new EmpleadoJuegoResponseDTO();
+        devuelto.setId_empleado(1L);
+        devuelto.setNombre("carlos");
+        devuelto.setApellido("gomez");
+        devuelto.setDni("1122223333");
+        devuelto.setAsignaciones(empleadoJuegoDTO.getAsignaciones());
+
+        Mockito.when(empleadoJuegoService.guardarEmpleadoJuego(Mockito.any(EmpleadoJuegoDTO.class)))
+                        .thenThrow(new JuegoNoEncontradoError("El juego con id + 8 + no fue encontrado"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/empleados/juego")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(empleadoJuegoDTO))
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje").value("El juego con id + 8 + no fue encontrado"));
     }
 
-    @Disabled
     @Test
-    public void deberiaDarErrorSiIntentaAsignarEmpleadoADosOMasVecesElMismoIdJuego(){
+    public void deberiaDarErrorSiIntentaAsignarEmpleadoADosOMasVecesElMismoIdJuego() throws Exception {
+        EmpleadoJuegoDTO empleadoJuegoDTO = new EmpleadoJuegoDTO();
+        empleadoJuegoDTO.setNombre("carlos");
+        empleadoJuegoDTO.setApellido("gomez");
+        empleadoJuegoDTO.setDni("1122223333");
+        List<AsignacionDTO> asignaciones = new ArrayList<>();
+        AsignacionDTO as1 = new AsignacionDTO();
+        as1.setId_juego(juego.getId_juego());
+        asignaciones.add(as1);
+        AsignacionDTO as2 = new AsignacionDTO();
+        as1.setId_juego(juego.getId_juego());
+        asignaciones.add(as2);
+        empleadoJuegoDTO.setAsignaciones(asignaciones);
+
+        Mockito.when(empleadoJuegoService.guardarEmpleadoJuego(Mockito.any(EmpleadoJuegoDTO.class)))
+                .thenThrow(new AsignacionDuplicadaError("Se enviaron juegos duplicados en las asignaciones"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/empleados/juego")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(empleadoJuegoDTO))
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje")
+                        .value("Se enviaron juegos duplicados en las asignaciones"));
+
 
     }
 

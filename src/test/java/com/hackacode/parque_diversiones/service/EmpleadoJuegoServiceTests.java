@@ -2,9 +2,11 @@ package com.hackacode.parque_diversiones.service;
 
 import com.hackacode.parque_diversiones.dto.AsignacionDTO;
 import com.hackacode.parque_diversiones.dto.EmpleadoJuegoDTO;
+import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 import com.hackacode.parque_diversiones.exceptions.AsignacionDuplicadaError;
 import com.hackacode.parque_diversiones.exceptions.EmpleadoNoEncontradoError;
 import com.hackacode.parque_diversiones.exceptions.JuegoNoEncontradoError;
+import com.hackacode.parque_diversiones.model.Asignacion;
 import com.hackacode.parque_diversiones.model.EmpleadoJuego;
 import com.hackacode.parque_diversiones.model.Juego;
 import com.hackacode.parque_diversiones.repository.EmpleadoJuegoRepository;
@@ -19,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,9 +40,23 @@ public class EmpleadoJuegoServiceTests {
     private EmpleadoJuegoService empleadoJuegoService;
 
     EmpleadoJuegoDTO empleado;
+    List<Asignacion> asignaciones;
 
     @BeforeEach
     void setUp() {
+        asignaciones = new ArrayList<>();
+        Asignacion as1 = new Asignacion();
+        Juego juego1 = new Juego();
+        juego1.setId_juego(1L);
+        as1.setJuego(juego1);
+
+        Asignacion as2 = new Asignacion();
+        Juego juego2 = new Juego();
+        juego2.setId_juego(2L);
+        as2.setJuego(juego2);
+
+        asignaciones.add(as1);
+        asignaciones.add(as2);
     }
 
     @Test
@@ -82,13 +99,18 @@ public class EmpleadoJuegoServiceTests {
         EmpleadoJuego emple = new EmpleadoJuego();
         emple.setId_empleado(3L);
         emple.setNombre("jose");
+        emple.setAsignaciones(asignaciones);
         Mockito.when(empleadoJuegoRepository.findById(emple.getId_empleado()))
                 .thenReturn(Optional.of(emple));
-        EmpleadoJuego encontrado = empleadoJuegoService.buscarEmpleado(emple.getId_empleado());
+        Mockito.when(empleadoJuegoRepository.obtenerJuegosDelEmpleado(emple.getId_empleado()))
+                .thenReturn(List.of(1L,2L));
+
+        EmpleadoJuegoResponseDTO encontrado = empleadoJuegoService.buscarEmpleado(emple.getId_empleado());
         Assertions.assertNotNull(encontrado);
         Assertions.assertEquals(3L, encontrado.getId_empleado());
         Assertions.assertEquals("jose", encontrado.getNombre());
-
+        Assertions.assertEquals(1L, encontrado.getAsignaciones().get(0).getId_juego());
+        Assertions.assertEquals(2L, encontrado.getAsignaciones().get(1).getId_juego());
     }
 
     @Test

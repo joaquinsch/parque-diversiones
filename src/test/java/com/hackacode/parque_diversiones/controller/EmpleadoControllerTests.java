@@ -53,6 +53,7 @@ public class EmpleadoControllerTests {
         unEmpleado = new EmpleadoJuego();
         unEmpleado.setId_empleado(3L);
         unEmpleado.setNombre("jose");
+
     }
 
     @Test
@@ -154,8 +155,12 @@ public class EmpleadoControllerTests {
 
     @Test
     public void deberiaEncontrarAlEmpleadoBuscadoPorId() throws Exception {
+        EmpleadoJuegoResponseDTO empleadoRespuesta = new EmpleadoJuegoResponseDTO();
+        empleadoRespuesta.setId_empleado(3L);
+        empleadoRespuesta.setNombre("jose");
+
         Mockito.when(empleadoJuegoService.buscarEmpleado(unEmpleado.getId_empleado()))
-                .thenReturn(unEmpleado);
+                .thenReturn(empleadoRespuesta);
         mockMvc.perform(MockMvcRequestBuilders.get("/empleados/3")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -176,6 +181,4 @@ public class EmpleadoControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje")
                         .value("No se encontró al empleado con id " + unEmpleado.getId_empleado()));
     }
-
-
 }

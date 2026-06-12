@@ -30,4 +30,12 @@ public class EmpleadoController {
                 .status(HttpStatus.OK)
                 .body(empleadoJuegoService.buscarEmpleado(id_empleado));
     }
+
+    @PutMapping("/{id_empleado}")
+    public ResponseEntity<EmpleadoJuegoResponseDTO> editarEmpleadoJuego(@PathVariable Long id_empleado, @RequestBody EmpleadoJuegoDTO empleadoJuegoDTO) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(empleadoJuegoService.editarEmpleado(id_empleado, empleadoJuegoDTO));
+    }
+
 }

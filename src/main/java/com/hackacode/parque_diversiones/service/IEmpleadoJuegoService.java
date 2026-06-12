@@ -6,4 +6,5 @@ import com.hackacode.parque_diversiones.dto.EmpleadoJuegoResponseDTO;
 public interface IEmpleadoJuegoService {
     EmpleadoJuegoResponseDTO guardarEmpleadoJuego(EmpleadoJuegoDTO empleadoDTO);
     EmpleadoJuegoResponseDTO buscarEmpleado(Long id_empleado);
+    EmpleadoJuegoResponseDTO editarEmpleado(Long id_empleado, EmpleadoJuegoDTO empleadoJuegoDTO);
 }

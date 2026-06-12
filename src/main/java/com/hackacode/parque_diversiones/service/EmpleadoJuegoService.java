@@ -36,7 +36,7 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         aGuardar.setNombre(empleadoDTO.getNombre());
         aGuardar.setApellido(empleadoDTO.getApellido());
         aGuardar.setDni(empleadoDTO.getDni());
-        aGuardar.setAsignaciones(validarAsignaciones(empleadoDTO, aGuardar));
+        aGuardar.setAsignaciones(crearAsignacionesAPartirDeDTO(empleadoDTO, aGuardar));
         EmpleadoJuego guardado = empleadoJuegoRepository.save(aGuardar);
 
         EmpleadoJuegoResponseDTO devuelto = new EmpleadoJuegoResponseDTO();
@@ -62,6 +62,28 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         return respuesta;
     }
 
+    @Override
+    public EmpleadoJuegoResponseDTO editarEmpleado(Long id_empleado, EmpleadoJuegoDTO empleadoJuegoDTO) {
+        EmpleadoJuego buscado = empleadoJuegoRepository.findById(id_empleado).orElseThrow(
+                () -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado)
+        );
+        buscado.setNombre(empleadoJuegoDTO.getNombre());
+        buscado.setApellido(empleadoJuegoDTO.getApellido());
+        buscado.setDni(empleadoJuegoDTO.getDni());
+        // validarExistenciaDeAsignaciones(empleadoJuegoDTO);
+        // buscado.setAsignaciones(crearAsignacionesAPartirDeDTO(empleadoJuegoDTO, buscado));
+        EmpleadoJuego guardado = empleadoJuegoRepository.save(buscado);
+
+        EmpleadoJuegoResponseDTO empleadoJuegoResponseDTO = new EmpleadoJuegoResponseDTO();
+        empleadoJuegoResponseDTO.setId_empleado(guardado.getId_empleado());
+        empleadoJuegoResponseDTO.setApellido(guardado.getApellido());
+        empleadoJuegoResponseDTO.setNombre(guardado.getNombre());
+        empleadoJuegoResponseDTO.setDni(guardado.getDni());
+        // empleadoJuegoResponseDTO.setAsignaciones(empleadoJuegoDTO.getAsignaciones());
+
+        return empleadoJuegoResponseDTO;
+    }
+
     public List<AsignacionDTO> obtenerAsignacionesDeEmpleado(Long id_empleado) {
         List<AsignacionDTO> asignaciones = new ArrayList<>();
         List<Long> ids_juegos = empleadoJuegoRepository.obtenerJuegosDelEmpleado(id_empleado);
@@ -76,7 +98,7 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         verifica en las asignaciones que se pasan al crear el empleado, que existan los juegos que se están pasando,
         luego crea la asignacion asociada al juego y al empleado
      */
-    private List<Asignacion> validarAsignaciones(EmpleadoJuegoDTO empleadoJuegoDTO, EmpleadoJuego empleadoJuego) {
+    private List<Asignacion> crearAsignacionesAPartirDeDTO(EmpleadoJuegoDTO empleadoJuegoDTO, EmpleadoJuego empleadoJuego) {
         List<Asignacion> asignaciones = new ArrayList<>();
         validarAsignacionesRepetidas(empleadoJuegoDTO);
 
@@ -91,6 +113,13 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         }
         return asignaciones;
     }
+
+    /*private void validarExistenciaDeAsignaciones(EmpleadoJuegoDTO empleadoJuegoDTO) {
+        for (AsignacionDTO asignacionDTO : empleadoJuegoDTO.getAsignaciones()) {
+            Juego juego = juegoRepository.findById(asignacionDTO.getId_juego())
+                    .orElseThrow(() -> new JuegoNoEncontradoError("El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
+        }
+    }*/
 
     private void validarAsignacionesRepetidas(EmpleadoJuegoDTO empleadoJuegoDTO) {
         Set<Long> idsJuegosValidados = empleadoJuegoDTO.getAsignaciones().stream()

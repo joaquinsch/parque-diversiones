@@ -39,6 +39,7 @@ public class EmpleadoControllerTests {
     Juego juego;
     Juego juego2;
     EmpleadoJuego unEmpleado;
+    //List<AsignacionDTO> asignacionesDTOS;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +54,6 @@ public class EmpleadoControllerTests {
         unEmpleado = new EmpleadoJuego();
         unEmpleado.setId_empleado(3L);
         unEmpleado.setNombre("jose");
-
     }
 
     @Test
@@ -180,5 +180,42 @@ public class EmpleadoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.mensaje")
                         .value("No se encontró al empleado con id " + unEmpleado.getId_empleado()));
+    }
+
+    @Test
+    public void deberiaEditarDatosDelEmpleado() throws Exception {
+        EmpleadoJuegoDTO datosAEditar = new EmpleadoJuegoDTO();
+        datosAEditar.setNombre("josefina");
+        datosAEditar.setApellido("gimenez");
+
+       /* Juego juego3 = new Juego();
+        juego3.setId_juego(7L);
+
+        AsignacionDTO asDto1 = new AsignacionDTO();
+        asDto1.setId_juego(juego.getId_juego());
+        AsignacionDTO asDto2 = new AsignacionDTO();
+        asDto2.setId_juego(juego3.getId_juego()); // 7L
+        datosAEditar.setAsignaciones(List.of(asDto1, asDto2));*/
+
+        EmpleadoJuegoResponseDTO editadoDevuelto = new EmpleadoJuegoResponseDTO();
+        editadoDevuelto.setId_empleado(1L);
+        editadoDevuelto.setNombre("josefina");
+        editadoDevuelto.setApellido("gimenez");
+        // editadoDevuelto.setAsignaciones(List.of(asDto1, asDto2));
+
+        Mockito.when(empleadoJuegoService.editarEmpleado(Mockito.anyLong(), Mockito.any(EmpleadoJuegoDTO.class)))
+                .thenReturn(editadoDevuelto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/empleados/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(datosAEditar))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id_empleado").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nombre").value("josefina"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.apellido").value("gimenez"));
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[0].id_juego").value(juego.getId_juego()))
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[1].id_juego").value(7L));
+
     }
 }

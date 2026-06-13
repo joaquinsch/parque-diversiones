@@ -70,16 +70,24 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         buscado.setNombre(empleadoJuegoDTO.getNombre());
         buscado.setApellido(empleadoJuegoDTO.getApellido());
         buscado.setDni(empleadoJuegoDTO.getDni());
-        // validarExistenciaDeAsignaciones(empleadoJuegoDTO);
-        // buscado.setAsignaciones(crearAsignacionesAPartirDeDTO(empleadoJuegoDTO, buscado));
+        buscado.getAsignaciones().clear();
+        buscado.getAsignaciones().addAll(crearAsignacionesAPartirDeDTO(empleadoJuegoDTO, buscado));
         EmpleadoJuego guardado = empleadoJuegoRepository.save(buscado);
+
+        List<AsignacionDTO> asignacionesResponse = guardado.getAsignaciones().stream()
+                .map(a -> {
+                    AsignacionDTO asignacionDTO = new AsignacionDTO();
+                    asignacionDTO.setId_juego(a.getJuego().getId_juego());
+                    return asignacionDTO;
+                })
+                .collect(Collectors.toList());
 
         EmpleadoJuegoResponseDTO empleadoJuegoResponseDTO = new EmpleadoJuegoResponseDTO();
         empleadoJuegoResponseDTO.setId_empleado(guardado.getId_empleado());
         empleadoJuegoResponseDTO.setApellido(guardado.getApellido());
         empleadoJuegoResponseDTO.setNombre(guardado.getNombre());
         empleadoJuegoResponseDTO.setDni(guardado.getDni());
-        // empleadoJuegoResponseDTO.setAsignaciones(empleadoJuegoDTO.getAsignaciones());
+        empleadoJuegoResponseDTO.setAsignaciones(asignacionesResponse);
 
         return empleadoJuegoResponseDTO;
     }

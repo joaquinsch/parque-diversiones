@@ -16,6 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EmpleadoJuego extends Empleado {
 
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Asignacion> asignaciones;
 }

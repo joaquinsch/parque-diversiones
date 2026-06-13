@@ -218,4 +218,40 @@ public class EmpleadoControllerTests {
                 //.andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[1].id_juego").value(7L));
 
     }
+
+    @Test
+    public void deberiaEditarLasAsignacionesDelEmpleado() throws Exception {
+        EmpleadoJuegoDTO datosAEditar = new EmpleadoJuegoDTO();
+        datosAEditar.setNombre("maria");
+        datosAEditar.setApellido("perez");
+        AsignacionDTO asDto1 = new AsignacionDTO();
+        asDto1.setId_juego(3L); // juegos nuevos, distintos a los que tenía
+        AsignacionDTO asDto2 = new AsignacionDTO();
+        asDto2.setId_juego(4L);
+        datosAEditar.setAsignaciones(List.of(asDto1, asDto2));
+
+        // lo que devuelve
+        EmpleadoJuegoResponseDTO devuelto = new EmpleadoJuegoResponseDTO();
+        devuelto.setId_empleado(1L);
+        devuelto.setNombre("maria");
+        devuelto.setApellido("perez");
+        AsignacionDTO asResp1 = new AsignacionDTO();
+        asResp1.setId_juego(3L);
+        AsignacionDTO asResp2 = new AsignacionDTO();
+        asResp2.setId_juego(4L);
+        devuelto.setAsignaciones(List.of(asResp1, asResp2));
+
+        Mockito.when(empleadoJuegoService.editarEmpleado(Mockito.anyLong(), Mockito.any()))
+                .thenReturn(devuelto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/empleados/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(datosAEditar))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id_empleado").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[0].id_juego").value(3L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.asignaciones[1].id_juego").value(4L));
+    }
 }

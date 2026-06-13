@@ -137,7 +137,7 @@ public class EmpleadoJuegoServiceTests {
         empleadoRecuperado.setId_empleado(1L);
         empleadoRecuperado.setNombre("maria");
         empleadoRecuperado.setApellido("perez");
-       /* Asignacion as1 = new Asignacion();
+        Asignacion as1 = new Asignacion();
         Juego juego1 = new Juego();
         juego1.setId_juego(1L);
         as1.setJuego(juego1);
@@ -152,23 +152,23 @@ public class EmpleadoJuegoServiceTests {
 
         Juego juego3 = new Juego();
         juego3.setId_juego(7L);
-        */
+
         EmpleadoJuegoDTO datosAEditar = new EmpleadoJuegoDTO();
         datosAEditar.setNombre("josefina");
         datosAEditar.setApellido("gimenez");
-      /*  asignacionesDTOS = new ArrayList<>();
+        asignacionesDTOS = new ArrayList<>();
         AsignacionDTO asDto1 = new AsignacionDTO();
         asDto1.setId_juego(juego1.getId_juego());
         AsignacionDTO asDto2 = new AsignacionDTO();
         asDto2.setId_juego(juego3.getId_juego()); // edito un juego asignado
         asignacionesDTOS.add(asDto1);
         asignacionesDTOS.add(asDto2);
-        datosAEditar.setAsignaciones(asignacionesDTOS);*/
+        datosAEditar.setAsignaciones(asignacionesDTOS);
 
         EmpleadoJuego guardadoEditado = new EmpleadoJuego();
         guardadoEditado.setNombre("josefina");
         guardadoEditado.setApellido("gimenez");
-        /*Asignacion as1guardada = new Asignacion();
+        Asignacion as1guardada = new Asignacion();
         Juego juego1guardado = new Juego();
         juego1guardado.setId_juego(1L);
         as1guardada.setJuego(juego1guardado);
@@ -179,14 +179,14 @@ public class EmpleadoJuegoServiceTests {
         List<Asignacion> asignacionesGuardadas = new ArrayList<>();
         asignacionesGuardadas.add(as1guardada);
         asignacionesGuardadas.add(as2guardada);
-        guardadoEditado.setAsignaciones(asignacionesGuardadas);*/
+        guardadoEditado.setAsignaciones(asignacionesGuardadas);
 
         Mockito.when(empleadoJuegoRepository.findById(empleadoRecuperado.getId_empleado()))
                 .thenReturn(Optional.of(empleadoRecuperado));
-       /* Mockito.when(juegoRepository.findById(juego1.getId_juego()))
+        Mockito.when(juegoRepository.findById(juego1.getId_juego()))
                 .thenReturn(Optional.of(juego1));
         Mockito.when(juegoRepository.findById(juego3.getId_juego()))
-                .thenReturn(Optional.of(juego3));*/
+                .thenReturn(Optional.of(juego3));
         Mockito.when(empleadoJuegoRepository.save(Mockito.any(EmpleadoJuego.class))).thenReturn(guardadoEditado);
 
         EmpleadoJuegoResponseDTO editadoDevuelto = empleadoJuegoService.editarEmpleado(empleadoRecuperado.getId_empleado(),
@@ -194,8 +194,8 @@ public class EmpleadoJuegoServiceTests {
 
         Assertions.assertEquals("josefina", editadoDevuelto.getNombre());
         Assertions.assertEquals("gimenez", editadoDevuelto.getApellido());
-        //Assertions.assertEquals(1L, editadoDevuelto.getAsignaciones().get(0).getId_juego());
-        //Assertions.assertEquals(7L, editadoDevuelto.getAsignaciones().get(1).getId_juego());
+        Assertions.assertEquals(1L, editadoDevuelto.getAsignaciones().get(0).getId_juego());
+        Assertions.assertEquals(7L, editadoDevuelto.getAsignaciones().get(1).getId_juego());
 
     }
 }

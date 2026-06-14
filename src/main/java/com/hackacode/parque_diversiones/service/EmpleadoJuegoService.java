@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class EmpleadoJuegoService implements IEmpleadoJuegoService{
+public class EmpleadoJuegoService implements IEmpleadoJuegoService {
 
     private final EmpleadoJuegoRepository empleadoJuegoRepository;
     private final JuegoRepository juegoRepository;
@@ -50,9 +50,8 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
 
     @Override
     public EmpleadoJuegoResponseDTO buscarEmpleado(Long id_empleado) {
-        EmpleadoJuego buscado = empleadoJuegoRepository.findById(id_empleado).orElseThrow(
-                () -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado)
-        );
+        EmpleadoJuego buscado = empleadoJuegoRepository.findById(id_empleado)
+                .orElseThrow(() -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado));
         EmpleadoJuegoResponseDTO respuesta = new EmpleadoJuegoResponseDTO();
         respuesta.setId_empleado(buscado.getId_empleado());
         respuesta.setNombre(buscado.getNombre());
@@ -64,9 +63,8 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
 
     @Override
     public EmpleadoJuegoResponseDTO editarEmpleado(Long id_empleado, EmpleadoJuegoDTO empleadoJuegoDTO) {
-        EmpleadoJuego buscado = empleadoJuegoRepository.findById(id_empleado).orElseThrow(
-                () -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado)
-        );
+        EmpleadoJuego buscado = empleadoJuegoRepository.findById(id_empleado)
+                .orElseThrow(() -> new EmpleadoNoEncontradoError("No se encontró al empleado con id " + id_empleado));
         buscado.setNombre(empleadoJuegoDTO.getNombre());
         buscado.setApellido(empleadoJuegoDTO.getApellido());
         buscado.setDni(empleadoJuegoDTO.getDni());
@@ -74,13 +72,11 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         buscado.getAsignaciones().addAll(crearAsignacionesAPartirDeDTO(empleadoJuegoDTO, buscado));
         EmpleadoJuego guardado = empleadoJuegoRepository.save(buscado);
 
-        List<AsignacionDTO> asignacionesResponse = guardado.getAsignaciones().stream()
-                .map(a -> {
-                    AsignacionDTO asignacionDTO = new AsignacionDTO();
-                    asignacionDTO.setId_juego(a.getJuego().getId_juego());
-                    return asignacionDTO;
-                })
-                .collect(Collectors.toList());
+        List<AsignacionDTO> asignacionesResponse = guardado.getAsignaciones().stream().map(a -> {
+            AsignacionDTO asignacionDTO = new AsignacionDTO();
+            asignacionDTO.setId_juego(a.getJuego().getId_juego());
+            return asignacionDTO;
+        }).collect(Collectors.toList());
 
         EmpleadoJuegoResponseDTO empleadoJuegoResponseDTO = new EmpleadoJuegoResponseDTO();
         empleadoJuegoResponseDTO.setId_empleado(guardado.getId_empleado());
@@ -95,24 +91,27 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
     public List<AsignacionDTO> obtenerAsignacionesDeEmpleado(Long id_empleado) {
         List<AsignacionDTO> asignaciones = new ArrayList<>();
         List<Long> ids_juegos = empleadoJuegoRepository.obtenerJuegosDelEmpleado(id_empleado);
-        for (Long id_juego: ids_juegos) {
+        for (Long id_juego : ids_juegos) {
             AsignacionDTO asignacionDTO = new AsignacionDTO();
             asignacionDTO.setId_juego(id_juego);
             asignaciones.add(asignacionDTO);
         }
         return asignaciones;
     }
+
     /*
         verifica en las asignaciones que se pasan al crear el empleado, que existan los juegos que se están pasando,
         luego crea la asignacion asociada al juego y al empleado
      */
-    private List<Asignacion> crearAsignacionesAPartirDeDTO(EmpleadoJuegoDTO empleadoJuegoDTO, EmpleadoJuego empleadoJuego) {
+    private List<Asignacion> crearAsignacionesAPartirDeDTO(EmpleadoJuegoDTO empleadoJuegoDTO,
+                                                           EmpleadoJuego empleadoJuego) {
         List<Asignacion> asignaciones = new ArrayList<>();
         validarAsignacionesRepetidas(empleadoJuegoDTO);
 
         for (AsignacionDTO asignacionDTO : empleadoJuegoDTO.getAsignaciones()) {
-            Juego juego = juegoRepository.findById(asignacionDTO.getId_juego())
-                    .orElseThrow(() -> new JuegoNoEncontradoError("El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
+            Juego juego = juegoRepository.findById(asignacionDTO.getId_juego()).orElseThrow(
+                    () -> new JuegoNoEncontradoError(
+                            "El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
 
             Asignacion asignacion = new Asignacion();
             asignacion.setJuego(juego);
@@ -122,17 +121,11 @@ public class EmpleadoJuegoService implements IEmpleadoJuegoService{
         return asignaciones;
     }
 
-    /*private void validarExistenciaDeAsignaciones(EmpleadoJuegoDTO empleadoJuegoDTO) {
-        for (AsignacionDTO asignacionDTO : empleadoJuegoDTO.getAsignaciones()) {
-            Juego juego = juegoRepository.findById(asignacionDTO.getId_juego())
-                    .orElseThrow(() -> new JuegoNoEncontradoError("El juego con id " + asignacionDTO.getId_juego() + " no fue encontrado"));
-        }
-    }*/
-
     private void validarAsignacionesRepetidas(EmpleadoJuegoDTO empleadoJuegoDTO) {
-        Set<Long> idsJuegosValidados = empleadoJuegoDTO.getAsignaciones().stream()
-                .map(AsignacionDTO::getId_juego)
-                .collect(Collectors.toSet());
+        Set<Long> idsJuegosValidados =
+                empleadoJuegoDTO.getAsignaciones().stream()
+                        .map(AsignacionDTO::getId_juego)
+                        .collect(Collectors.toSet());
 
         if (idsJuegosValidados.size() != empleadoJuegoDTO.getAsignaciones().size()) {
             throw new AsignacionDuplicadaError("Se enviaron juegos duplicados en las asignaciones");

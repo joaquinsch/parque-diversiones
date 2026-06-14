@@ -25,14 +25,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AsignacionDuplicadaError.class)
-    public ResponseEntity<Map<String, String>> handleAsignacionDuplicadaError(AsignacionDuplicadaError e){
+    public ResponseEntity<Map<String, String>> handleAsignacionDuplicadaError(AsignacionDuplicadaError e) {
         return ResponseEntity
                 .badRequest()
                 .body((Map.of("mensaje", e.getMessage())));
     }
 
     @ExceptionHandler(EmpleadoNoEncontradoError.class)
-    public ResponseEntity<Map<String, String>> handleEmpleadoNoEncontradoError(EmpleadoNoEncontradoError e){
+    public ResponseEntity<Map<String, String>> handleEmpleadoNoEncontradoError(EmpleadoNoEncontradoError e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body((Map.of("mensaje", e.getMessage())));

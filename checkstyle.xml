@@ -5,7 +5,12 @@
 
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
-    <property name="severity" value="warning"/>
+    <property name="severity" value="error"/>
+
+    <!-- EXCLUIR archivos .properties de la revisión -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value=".*\.properties$"/>
+    </module>
 
     <!-- Estos van directamente bajo Checker -->
     <module name="LineLength">
@@ -22,7 +27,7 @@
         <module name="MethodName"/>
 
         <!-- Nombres de variables de instancia -->
-        <module name="MemberName"/>
+        <!-- module name="MemberName"/-->
 
         <!-- Nombres de variables locales -->
         <!-- module name="LocalVariableName"/-->

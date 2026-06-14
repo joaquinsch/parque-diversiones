@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Asignacion{
+public class Asignacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_asignacion;
